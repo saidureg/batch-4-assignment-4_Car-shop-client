@@ -1,10 +1,13 @@
+import { Outlet } from "react-router-dom";
 import "./App.css";
+import Navbar from "./components/Header/Navbar";
 
 function App() {
   return (
-    <>
-      <h1>This car shop Home</h1>
-    </>
+    <div>
+      <Navbar />
+      <Outlet />
+    </div>
   );
 }
 
