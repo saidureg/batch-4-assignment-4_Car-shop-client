@@ -1,0 +1,8 @@
+.featured-products {
+  background-image: url("../../assets/image/bg1.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  margin-top: 6rem;
+  padding: 50px;
+}

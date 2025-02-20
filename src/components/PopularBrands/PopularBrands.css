@@ -1,0 +1,78 @@
+.brands-section {
+  text-align: center;
+  padding-top: 50px;
+}
+
+.section-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 48px;
+}
+
+.carousel-wrapper {
+  position: relative;
+  width: 100%;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.brand-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* .brand-logo {
+  max-width: 100%;
+  height: auto;
+} */
+
+.brand-logo {
+  height: 80px !important;
+  width: 45% !important;
+  object-fit: contain;
+}
+
+.arrow {
+  font-size: 24px;
+  cursor: pointer;
+  padding: 10px;
+  background: #333;
+  color: #fff;
+  border-radius: 50%;
+  position: absolute;
+}
+
+.left {
+  left: 0px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.right {
+  right: 0px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.features-wrapper {
+  margin-top: 30px;
+  background: #f8f9fa;
+}
+
+.features {
+  max-width: 1280px;
+  margin: 0 auto !important;
+}
+
+.feature-card {
+  text-align: center;
+  padding-top: 32px;
+  padding-bottom: 48px;
+}
+
+.feature-icon {
+  font-size: 40px;
+  color: #007bff;
+  margin-bottom: 10px;
+}

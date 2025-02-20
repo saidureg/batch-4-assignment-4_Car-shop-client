@@ -1,10 +1,21 @@
 import { useState } from "react";
-import { Menu, Drawer, Avatar } from "antd";
+import { Menu, Drawer, Avatar, Dropdown } from "antd";
 import { MenuOutlined } from "@ant-design/icons";
 import "./Navbar.css";
 
 import logo from "../../assets/car_logo.png";
 import { Link } from "react-router-dom";
+
+const items = [
+  {
+    key: "1",
+    label: <Link to="/">Dashboard</Link>,
+  },
+  {
+    key: "2",
+    label: <Link to="">Logout</Link>,
+  },
+];
 
 const Navbar = () => {
   const [visible, setVisible] = useState(false);
@@ -14,17 +25,22 @@ const Navbar = () => {
 
   const menuItems = [
     { key: "home", label: <Link to="/">Home</Link> },
-    { key: "cars", label: <a href="#">Cars</a> },
+    { key: "cars", label: <Link to="/cars">Cars</Link> },
     { key: "about", label: <Link to="/about">About</Link> },
   ];
+
+  const menuItemsForMobile = [
+    { key: "home", label: <Link to="/">Home</Link> },
+    { key: "cars", label: <Link to="/cars">Cars</Link> },
+    { key: "about", label: <Link to="/about">About</Link> },
+    { key: "dashboard", label: <Link to="/">Dashboard</Link> },
+  ];
   return (
-    <nav className="navbar">
-      {/* Logo */}
+    <nav className="navbar ">
       <div className="logo">
         <img src={logo} alt="Car Shop Logo" />
       </div>
 
-      {/* Desktop Menu */}
       <div className="menu-container">
         <Menu
           mode="horizontal"
@@ -34,19 +50,18 @@ const Navbar = () => {
         />
       </div>
 
-      {/* Mobile Menu Icon */}
       <div className="mobile-menu-icon" onClick={showDrawer}>
         <MenuOutlined className="icon" />
       </div>
 
-      {/* Avatar (Desktop Only) */}
-      <div className="avatar-container">
-        <Avatar src="https://via.placeholder.com/40" className="avatar" />
-      </div>
+      <Dropdown menu={{ items }} placement="bottomRight">
+        <div className="avatar-container">
+          <Avatar src="https://via.placeholder.com/40" className="avatar" />
+        </div>
+      </Dropdown>
 
-      {/* Mobile Drawer */}
       <Drawer
-        title="Menu"
+        title="Auto Shop"
         placement="right"
         onClose={closeDrawer}
         open={visible}
@@ -54,13 +69,9 @@ const Navbar = () => {
         <Menu
           mode="vertical"
           selectedKeys={[]}
-          items={menuItems}
+          items={menuItemsForMobile}
           onClick={closeDrawer}
         />
-        {/* Avatar inside drawer for mobile */}
-        <div className="drawer-avatar">
-          <Avatar src="https://via.placeholder.com/40" className="avatar" />
-        </div>
       </Drawer>
     </nav>
   );
