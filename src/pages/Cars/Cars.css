@@ -1,0 +1,54 @@
+.cars-banner {
+  background-image: url("../../assets/image/bg13.jpg");
+  background-size: cover;
+  background-position: center center;
+  height: 300px;
+  display: table;
+  width: 100%;
+  position: relative;
+  mix-blend-mode: darken;
+}
+
+.banner-content {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.banner-content h1 {
+  color: #fff;
+  font-size: 2.2rem;
+  font-weight: 700;
+  line-height: 36px;
+  max-width: 1280px;
+  margin: 0 auto 25px;
+  padding: 0 20px;
+}
+
+.cars-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.filter-section {
+  max-width: 255px;
+}
+
+.car-image {
+  width: 100%;
+  height: 200px;
+  border-radius: 8px;
+  transition: transform 0.8s ease-in-out;
+}
+
+.zoom-effect:hover {
+  transform: scale(1.05);
+}
+
+@media screen and (max-width: 768px) {
+  .cars-container {
+    flex-direction: column;
+  }
+}
