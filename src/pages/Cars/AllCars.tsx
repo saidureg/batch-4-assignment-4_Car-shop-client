@@ -16,6 +16,7 @@ import "antd/dist/reset.css";
 import "./Cars.css";
 import carImage from "../../assets/image/toyotaCar.png";
 import { Link } from "react-router-dom";
+import { useGetAllCarsQuery } from "../../redux/features/car/carApi";
 
 const { Header, Content, Sider } = Layout;
 const { Title, Text } = Typography;
@@ -92,11 +93,14 @@ const vehicles = [
     location: "Dhaka",
     price: "NEGOTIABLE",
     mileage: "18,741 KM",
-    image: carImage,
+    image: "https://i.ibb.co.com/S796G2qz/desktop-bg2.jpg",
   },
 ];
 
 const AllCars = () => {
+  const { data: allCars } = useGetAllCarsQuery(undefined);
+
+  console.log("Cars:", allCars);
   return (
     <>
       <div className="cars-banner">
@@ -178,9 +182,8 @@ const AllCars = () => {
           <Layout>
             <Header
               style={{
-                background: "#fff",
+                background: "#F0F3F8",
                 padding: "20px",
-                borderBottom: "1px solid #ddd",
               }}
             >
               <Title level={3}>25,536 vehicles for sale in Bangladesh</Title>

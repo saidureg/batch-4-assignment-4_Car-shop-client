@@ -1,0 +1,43 @@
+.register-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f4f4f4;
+}
+
+.register-form {
+  background: #ffffff;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+}
+
+.register-form .ant-form-item-label > label {
+  font-weight: 600;
+}
+
+.register-form .ant-input {
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.register-form .ant-btn-primary {
+  background-color: #1890ff;
+  border-color: #1890ff;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.register-form .ant-btn-primary:hover {
+  background-color: #40a9ff;
+  border-color: #40a9ff;
+}
+
+.register-form .ant-btn-primary:disabled {
+  background-color: #cccccc;
+  border-color: #cccccc;
+}

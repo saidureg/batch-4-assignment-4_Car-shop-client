@@ -16,3 +16,11 @@ body {
 .text-primary {
   color: #1e69b8 !important;
 }
+
+a {
+  text-decoration: none;
+}
+
+a:hover {
+  color: #1e69b8 !important;
+}

@@ -1,27 +1,39 @@
-import { useState } from "react";
-import { Menu, Drawer, Avatar, Dropdown } from "antd";
+import { useEffect, useState } from "react";
+import { Menu, Drawer, Avatar, Dropdown, Typography } from "antd";
 import { MenuOutlined } from "@ant-design/icons";
 import "./Navbar.css";
 
 import logo from "../../assets/car_logo.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAppDispatch } from "../../redux/hook";
+import { logout, TUser } from "../../redux/features/auth/authSlice";
+import { verifyToken } from "../../utils/verifyToken";
 
-const items = [
-  {
-    key: "1",
-    label: <Link to="/">Dashboard</Link>,
-  },
-  {
-    key: "2",
-    label: <Link to="">Logout</Link>,
-  },
-];
+const { Text } = Typography;
 
 const Navbar = () => {
   const [visible, setVisible] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const showDrawer = () => setVisible(true);
   const closeDrawer = () => setVisible(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const user = verifyToken(token) as TUser;
+      console.log("user", user);
+    }
+    setIsLoggedIn(!!token);
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    dispatch(logout());
+    navigate("/login");
+  };
 
   const menuItems = [
     { key: "home", label: <Link to="/">Home</Link> },
@@ -30,11 +42,17 @@ const Navbar = () => {
   ];
 
   const menuItemsForMobile = [
-    { key: "home", label: <Link to="/">Home</Link> },
-    { key: "cars", label: <Link to="/cars">Cars</Link> },
-    { key: "about", label: <Link to="/about">About</Link> },
-    { key: "dashboard", label: <Link to="/">Dashboard</Link> },
+    ...menuItems,
+    isLoggedIn
+      ? { key: "dashboard", label: <Link to="/dashboard">Dashboard</Link> }
+      : null,
+  ].filter((item) => item !== null);
+
+  const userMenuItems = [
+    { key: "1", label: <Link to="/dashboard">Dashboard</Link> },
+    { key: "2", label: <div onClick={handleLogout}>Logout</div> },
   ];
+
   return (
     <nav className="navbar ">
       <div className="logo">
@@ -54,11 +72,20 @@ const Navbar = () => {
         <MenuOutlined className="icon" />
       </div>
 
-      <Dropdown menu={{ items }} placement="bottomRight">
-        <div className="avatar-container">
-          <Avatar src="https://via.placeholder.com/40" className="avatar" />
-        </div>
-      </Dropdown>
+      {isLoggedIn ? (
+        <Dropdown menu={{ items: userMenuItems }} placement="bottomRight">
+          <div className="avatar-container">
+            <Avatar
+              src="https://i.ibb.co.com/1t2tDpp9/png-clipart-united-states-avatar-organization-information-user-avatar-service-computer-wallpaper-thu.png"
+              className="avatar"
+            />
+          </div>
+        </Dropdown>
+      ) : (
+        <Link to="/login">
+          <Text style={{ fontSize: "1.2rem", fontWeight: 500 }}>Login</Text>
+        </Link>
+      )}
 
       <Drawer
         title="Auto Shop"
