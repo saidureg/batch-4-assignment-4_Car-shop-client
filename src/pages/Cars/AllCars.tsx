@@ -1,7 +1,6 @@
 import {
   Layout,
   Card,
-  Select,
   Slider,
   Typography,
   Checkbox,
@@ -9,98 +8,67 @@ import {
   Breadcrumb,
   Row,
   Col,
+  Input,
 } from "antd";
-import { EnvironmentOutlined, FilterOutlined } from "@ant-design/icons";
+import { EnvironmentOutlined } from "@ant-design/icons";
 import "antd/dist/reset.css";
 
 import "./Cars.css";
-import carImage from "../../assets/image/toyotaCar.png";
 import { Link } from "react-router-dom";
 import { useGetAllCarsQuery } from "../../redux/features/car/carApi";
+import CustomSelect from "../../components/ui/CustomSelect/CustomSelect";
+import { useEffect, useState } from "react";
 
 const { Header, Content, Sider } = Layout;
 const { Title, Text } = Typography;
-const { Option } = Select;
-
-const vehicles = [
-  {
-    id: 1,
-    title: "2007 Nissan Sunny",
-    location: "Dhaka",
-    price: "BDT 650,000",
-    mileage: "200,000 KM",
-    image: carImage,
-  },
-  {
-    id: 2,
-    title: "2009 Toyota Corolla 2005",
-    location: "Rangpur",
-    price: "NEGOTIABLE",
-    mileage: "120,000 KM",
-    image: carImage,
-  },
-  {
-    id: 3,
-    title: "2013 BMW 525-i",
-    location: "Dhaka",
-    price: "NEGOTIABLE",
-    mileage: "18,741 KM",
-    image: carImage,
-  },
-  {
-    id: 4,
-    title: "2007 Nissan Sunny",
-    location: "Dhaka",
-    price: "BDT 650,000",
-    mileage: "200,000 KM",
-    image: carImage,
-  },
-  {
-    id: 5,
-    title: "2009 Toyota Corolla 2005",
-    location: "Rangpur",
-    price: "NEGOTIABLE",
-    mileage: "120,000 KM",
-    image: carImage,
-  },
-  {
-    id: 6,
-    title: "2013 BMW 525-i",
-    location: "Dhaka",
-    price: "NEGOTIABLE",
-    mileage: "18,741 KM",
-    image: carImage,
-  },
-  {
-    id: 7,
-    title: "2007 Nissan Sunny",
-    location: "Dhaka",
-    price: "BDT 650,000",
-    mileage: "200,000 KM",
-    image: carImage,
-  },
-  {
-    id: 8,
-    title: "2009 Toyota Corolla 2005",
-    location: "Rangpur",
-    price: "NEGOTIABLE",
-    mileage: "120,000 KM",
-    image: carImage,
-  },
-  {
-    id: 9,
-    title: "2013 BMW 525-i",
-    location: "Dhaka",
-    price: "NEGOTIABLE",
-    mileage: "18,741 KM",
-    image: "https://i.ibb.co.com/S796G2qz/desktop-bg2.jpg",
-  },
-];
 
 const AllCars = () => {
-  const { data: allCars } = useGetAllCarsQuery(undefined);
+  const [brandData, setBrandData] = useState<string[]>([]);
+  const [modelData, setModelData] = useState<string[]>([]);
+  const [categoryData, setCategoryData] = useState<string[]>([]);
 
-  console.log("Cars:", allCars);
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [selectedBrand, setSelectedBrand] = useState<string | null>(null);
+  const [selectedModel, setSelectedModel] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [inStock, setInStock] = useState<boolean>(false);
+
+  const [range, setRange] = useState<number[]>([10000, 1000001]);
+
+  const handleChange = (value: number[]) => {
+    if (value.length === 2) {
+      setRange(value);
+    }
+  };
+
+  const queryParams = [
+    searchQuery && { name: "searchTerm", value: searchQuery },
+    selectedBrand && { name: "brand", value: selectedBrand },
+    selectedModel && { name: "model", value: selectedModel },
+    selectedCategory && { name: "category", value: selectedCategory },
+    range[0] !== 10000 && { name: "minPrice", value: range[0].toString() },
+    range[1] !== 1000001 && { name: "maxPrice", value: range[1].toString() },
+    inStock && { name: "inStock", value: "true" },
+  ].filter(Boolean);
+
+  const { data: allCars } = useGetAllCarsQuery(queryParams);
+
+  useEffect(() => {
+    if (allCars?.data) {
+      const brands = allCars.data.map((item) => item.brand);
+      const uniqueBrands = [...new Set(brands)];
+      setBrandData(uniqueBrands);
+
+      const models = allCars.data.map((item) => item.model);
+      const uniqueModels = [...new Set(models)];
+      setModelData(uniqueModels);
+
+      const categories = allCars.data.map((item) => item.category);
+      const uniqueCategories = [...new Set(categories)].filter(Boolean);
+      setCategoryData(uniqueCategories);
+    }
+  }, [allCars]);
+
   return (
     <>
       <div className="cars-banner">
@@ -145,39 +113,94 @@ const AllCars = () => {
               }}
             >
               <Title level={4}>Filters</Title>
-              <Button type="link">Reset All</Button>
+              <Button
+                type="link"
+                onClick={() => {
+                  setSearchQuery("");
+                  setSelectedBrand(null);
+                  setSelectedModel(null);
+                  setSelectedCategory(null);
+                  setRange([10000, 1000001]);
+                }}
+              >
+                Reset All
+              </Button>
             </div>
-            <Checkbox style={{ marginBottom: "10px" }}>Show Sold Cars</Checkbox>
-            <Select
-              placeholder="Brand"
-              style={{ width: "100%", marginBottom: "10px" }}
+            <Checkbox
+              style={{ marginBottom: "10px" }}
+              onChange={(e) => setInStock(e.target.checked)}
             >
-              <Option value="all">All</Option>
-            </Select>
-            <Select
+              Show Avilable Cars Only
+            </Checkbox>
+            <Input
+              placeholder="Search cars"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              style={{ marginBottom: "10px" }}
+            />
+            <CustomSelect
+              label="Brand"
+              placeholder="Brand"
+              options={brandData.map((item) => ({
+                value: item,
+                label: item.charAt(0).toUpperCase() + item.slice(1),
+              }))}
+              onChange={(value) => setSelectedBrand(value)}
+              onSearch={(value) => console.log(value)}
+            />
+
+            <CustomSelect
+              label="Model"
               placeholder="Model"
-              style={{ width: "100%", marginBottom: "10px" }}
-              disabled
+              options={modelData.map((item) => ({
+                value: item,
+                label: item.charAt(0).toUpperCase() + item.slice(1),
+              }))}
+              onChange={(value) => setSelectedModel(value)}
+              onSearch={(value) => console.log(value)}
             />
-            <Title level={5}>Price Range</Title>
-            <Slider
-              range
-              min={10000}
-              max={100000001}
-              defaultValue={[10000, 500000]}
-              style={{ marginBottom: "10px" }}
+
+            <CustomSelect
+              label="Category"
+              placeholder="Category"
+              options={categoryData.map((item) => ({
+                value: item,
+                label: item.charAt(0).toUpperCase() + item.slice(1),
+              }))}
+              onChange={(value) => setSelectedCategory(value)}
+              onSearch={(value) => console.log(value)}
             />
-            <Title level={5}>Year</Title>
-            <Slider
-              range
-              min={1970}
-              max={2025}
-              defaultValue={[2000, 2025]}
-              style={{ marginBottom: "10px" }}
-            />
-            <Button type="primary" icon={<FilterOutlined />} block>
-              Apply Filters
-            </Button>
+
+            <div style={{ marginBottom: "20px" }}>
+              <Title level={5} style={{ fontWeight: "bold" }}>
+                PRICE RANGE
+              </Title>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  marginBottom: "8px",
+                }}
+              >
+                <span style={{ fontWeight: "bold" }}>
+                  ৳ {range[0].toLocaleString()}
+                </span>
+                <span style={{ fontWeight: "bold" }}>
+                  ৳ {range[1].toLocaleString()}
+                </span>
+              </div>
+              <Slider
+                range
+                min={10000}
+                max={1000001}
+                defaultValue={range}
+                onChange={handleChange}
+                styles={{
+                  track: { backgroundColor: "green" },
+                  handle: { borderColor: "red", backgroundColor: "white" },
+                }}
+              />
+            </div>
           </Sider>
           <Layout>
             <Header
@@ -186,36 +209,71 @@ const AllCars = () => {
                 padding: "20px",
               }}
             >
-              <Title level={3}>25,536 vehicles for sale in Bangladesh</Title>
+              <Title level={3}>
+                {allCars?.data?.length} vehicles for sale in Bangladesh
+              </Title>
             </Header>
             <Content style={{ padding: "20px" }}>
               <Row gutter={[16, 16]}>
-                {vehicles.map((item) => (
-                  <Col xs={24} sm={24} md={12} lg={8} xl={8} key={item.id}>
-                    <Link to={`/cars/${item.id}`}>
-                      <Card hoverable>
-                        <img
-                          alt={item.title}
-                          src={item.image}
-                          className="car-image zoom-effect"
-                        />
-                        <div style={{ padding: "10px" }}>
+                {allCars?.data?.map((item) => (
+                  <Col xs={24} sm={24} md={12} lg={8} xl={8} key={item._id}>
+                    <Card hoverable>
+                      <img
+                        alt={item.name}
+                        src={item?.image[0]}
+                        className="car-image zoom-effect"
+                      />
+                      <div style={{ padding: "10px" }}>
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                          }}
+                        >
                           <Title level={5} style={{ margin: 0 }}>
-                            {item.title}
+                            {item?.name}
                           </Title>
-                          <Text type="secondary">
-                            <EnvironmentOutlined /> {item.location}
+
+                          <Text
+                            type="secondary"
+                            style={{
+                              fontSize: "14px",
+                              fontWeight: "bold",
+                              padding: "4px",
+                              backgroundColor: "#f0f0f0",
+                              borderRadius: "4px",
+                            }}
+                          >
+                            {item?.category}
                           </Text>
-                          <p>
-                            <b style={{ color: "#d32f2f" }}>Price:</b>{" "}
-                            {item.price}
-                          </p>
-                          <p>
-                            <b>Mileage:</b> {item.mileage}
-                          </p>
                         </div>
-                      </Card>
-                    </Link>
+                        <div
+                          style={{
+                            marginBottom: "10px",
+                          }}
+                        >
+                          <Text type="secondary">
+                            {item?.brand} | {item?.model}
+                          </Text>
+                        </div>
+                        <Text type="secondary">
+                          <EnvironmentOutlined /> {item?.location || "Dhaka"}
+                        </Text>
+                        <p>
+                          <b style={{ color: "#d32f2f" }}>Price:</b>
+                          {item.price}
+                        </p>
+                        <p>
+                          <b>Mileage:</b> {item?.Mileage || "N/A"}
+                        </p>
+                      </div>
+                      <Link to={`/cars/${item._id}`}>
+                        <Button block variant="solid" color="primary">
+                          View Details
+                        </Button>
+                      </Link>
+                    </Card>
                   </Col>
                 ))}
               </Row>

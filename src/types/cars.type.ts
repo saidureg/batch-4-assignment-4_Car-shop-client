@@ -1,13 +1,21 @@
 export type TCar = {
-  _id: string;
+  _id?: string;
   name: string;
   brand: string;
   model: string;
   year: number;
+  CC: number;
   price: number;
   category: string;
-  description: string;
+  description?: string;
   quantity: number;
+  location?: string;
+  Mileage?: number;
+  image: string | string[];
+  AC?: boolean;
+  PST?: boolean;
+  MG?: boolean;
+  CNG?: boolean;
   inStock: boolean;
   createdAt: string;
   updatedAt: string;

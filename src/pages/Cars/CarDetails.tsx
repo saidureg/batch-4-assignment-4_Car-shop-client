@@ -1,28 +1,96 @@
-import { Layout, Breadcrumb, Row, Col, Table, Button } from "antd";
+import {
+  Layout,
+  Breadcrumb,
+  Row,
+  Col,
+  Table,
+  Button,
+  Modal,
+  Form,
+  Input,
+} from "antd";
 import "antd/dist/reset.css";
 import "./CarDetails.css";
-import carImage1 from "../../assets/image/toyotaCar.png";
-import carImage2 from "../../assets/image/car.png";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { useGetCarByIdQuery } from "../../redux/features/car/carApi";
+import { useCreateOrderMutation } from "../../redux/features/order/orderApi";
+import { toast } from "sonner";
+import { TUser } from "../../redux/features/auth/authSlice";
+import { verifyToken } from "../../utils/verifyToken";
 
 const { Content } = Layout;
-// const { Text } = Typography;
 
 const CarDetails = () => {
-  const car = {
-    name: "TOYOTA-NOAH",
-    code: "CHCa-1003221",
-    modelYear: 2000,
-    registrationYear: 2004,
-    cc: 2000,
-    ac: true,
-    pst: true,
-    mg: false,
-    cng: false,
-    price: 2695000,
-    images: [carImage1, carImage2, carImage1],
+  const { id } = useParams<{ id: string }>();
+
+  const { data: singleCar } = useGetCarByIdQuery(id ?? "");
+
+  const [createOrder, { isLoading, isSuccess, data, isError, error }] =
+    useCreateOrderMutation();
+
+  const {
+    name,
+    brand,
+    model,
+    year,
+    CC,
+    price,
+    category,
+    description,
+    quantity,
+    Mileage,
+    image,
+    AC,
+    PST,
+    MG,
+    CNG,
+    inStock,
+  } = singleCar?.data ?? {};
+
+  const [mainImage, setMainImage] = useState(singleCar?.data?.image[0]);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [useremail, setUseremail] = useState<string>("");
+
+  useEffect(() => {
+    setMainImage(singleCar?.data?.image[0]);
+  }, [singleCar]);
+
+  const showModal = () => {
+    setIsModalOpen(true);
   };
-  const [mainImage, setMainImage] = useState(car.images[0]);
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleOrder = async (values: { quantity: number }) => {
+    await createOrder({ car: id, quantity: values.quantity });
+  };
+
+  const toastId = "order";
+  useEffect(() => {
+    if (isLoading) toast.loading("Processing ...", { id: toastId });
+
+    if (isSuccess) {
+      toast.success(data?.message, { id: toastId });
+      if (data?.data) {
+        setTimeout(() => {
+          window.location.href = data.data;
+        }, 1000);
+      }
+    }
+
+    if (isError) toast.error(JSON.stringify(error), { id: toastId });
+  }, [data?.data, data?.message, error, isError, isLoading, isSuccess]);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const user = verifyToken(token) as TUser;
+      setUseremail(user.userEmail);
+    }
+  }, []);
 
   return (
     <>
@@ -50,7 +118,7 @@ const CarDetails = () => {
               title: "Cars Details",
             },
             {
-              title: "Car Name",
+              title: name,
             },
           ]}
         />
@@ -65,22 +133,23 @@ const CarDetails = () => {
                     <img src={mainImage} alt="Car" className="main-image" />
                   </div>
                   <div className="thumbnails">
-                    {car.images.map((img, index) => (
-                      <img
-                        key={index}
-                        src={img}
-                        alt={`Thumbnail ${index}`}
-                        className={`thumbnail ${
-                          mainImage === img ? "active" : ""
-                        }`}
-                        onClick={() => setMainImage(img)}
-                      />
-                    ))}
+                    {Array.isArray(image) &&
+                      image.map((img: string, index: number) => (
+                        <img
+                          key={index}
+                          src={img}
+                          alt={`Thumbnail ${index}`}
+                          className={`thumbnail ${
+                            mainImage === img ? "active" : ""
+                          }`}
+                          onClick={() => setMainImage(img)}
+                        />
+                      ))}
                   </div>
                 </Col>
                 <Col xs={24} lg={12} style={{ padding: "20px" }}>
-                  <h2>{car.name}</h2>
-                  <p>Car Code: {car.code}</p>
+                  <h2>{name}</h2>
+                  <p>Car Code: {brand}</p>
                   <Table
                     style={{
                       width: "100%",
@@ -92,28 +161,38 @@ const CarDetails = () => {
                       {
                         key: "1",
                         label: "Model Year",
-                        value: car.modelYear,
+                        value: model,
                         label2: "Registration Year",
-                        value2: car.registrationYear,
+                        value2: year,
                       },
+
                       {
                         key: "2",
-                        label: "CC",
-                        value: car.cc,
+                        label: "Category",
+                        value: category,
+                        label2: "CC",
+                        value2: CC,
                       },
                       {
                         key: "3",
                         label: "AC",
-                        value: car.ac ? "✔" : "✖",
+                        value: AC ? "✔" : "✖",
                         label2: "PST",
-                        value2: car.pst ? "✔" : "✖",
+                        value2: PST ? "✔" : "✖",
                       },
                       {
                         key: "4",
                         label: "MG",
-                        value: car.mg ? "✔" : "✖",
+                        value: MG ? "✔" : "✖",
                         label2: "CNG",
-                        value2: car.cng ? "✔" : "✖",
+                        value2: CNG ? "✔" : "✖",
+                      },
+                      {
+                        key: "5",
+                        label: "Mileage",
+                        value: Mileage + "KM",
+                        label2: "Stock",
+                        value2: quantity,
                       },
                     ]}
                     columns={[
@@ -140,23 +219,86 @@ const CarDetails = () => {
                     ]}
                     pagination={false}
                   />
+                  <p style={{ font: "1rem", fontWeight: 500, color: "gray" }}>
+                    {description ?? ""}
+                  </p>
                   <h3>
-                    Asking Price: <span className="price">{car.price} BDT</span>
+                    Asking Price: <span className="price">{price} BDT</span>
                   </h3>
-                  <Button
-                    style={{
-                      marginTop: "16px",
-                      width: "50%",
-                    }}
-                    type="primary"
-                  >
-                    Buy Now
-                  </Button>
+                  {inStock ? (
+                    <>
+                      <Button
+                        onClick={showModal}
+                        style={{
+                          marginTop: "16px",
+                          width: "50%",
+                        }}
+                        type="primary"
+                      >
+                        Buy Now
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <Button
+                        color="cyan"
+                        variant="solid"
+                        style={{
+                          marginTop: "16px",
+                          width: "50%",
+                        }}
+                      >
+                        Pre Order
+                      </Button>
+                    </>
+                  )}
                 </Col>
               </Row>
             </Content>
           </Layout>
         </Layout>
+        <Modal
+          title="Order Form"
+          open={isModalOpen}
+          onCancel={handleCancel}
+          footer={null}
+        >
+          <Form
+            layout="vertical"
+            onFinish={handleOrder}
+            initialValues={{
+              name: name,
+              useremail: useremail,
+              quantity: 1,
+            }}
+          >
+            <Form.Item
+              name="name"
+              label="Car Name"
+              rules={[{ required: true }]}
+            >
+              <Input disabled />
+            </Form.Item>
+            <Form.Item
+              name="useremail"
+              label="Email"
+              rules={[{ required: true }]}
+            >
+              <Input disabled />
+            </Form.Item>
+            <Form.Item
+              name="quantity"
+              label="Quantity"
+              rules={[{ required: true }]}
+            >
+              <Input type="number" placeholder="Quantity" />
+            </Form.Item>
+
+            <Button type="primary" htmlType="submit">
+              Order Now
+            </Button>
+          </Form>
+        </Modal>
       </div>
     </>
   );

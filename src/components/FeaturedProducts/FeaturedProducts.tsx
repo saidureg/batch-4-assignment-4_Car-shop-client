@@ -1,10 +1,12 @@
 import { Button, Card, Col, Flex, Row } from "antd";
 import "./FeaturedProducts.css";
-import carImage from "../../assets/image/toyotaCar.png";
+import { Link } from "react-router-dom";
+import { useGetAllCarsQuery } from "../../redux/features/car/carApi";
 
 const { Meta } = Card;
 
 const FeaturedProducts = () => {
+  const { data: allCars } = useGetAllCarsQuery(undefined);
   return (
     <div className="featured-products">
       <h2
@@ -22,7 +24,7 @@ const FeaturedProducts = () => {
         className="card-container"
         style={{ maxWidth: "1280px", margin: "48px auto" }}
       >
-        {[...Array(6)].map((_, index) => (
+        {allCars?.data?.slice(0, 6).map((item, index) => (
           <Col
             key={index}
             className="gutter-row"
@@ -35,7 +37,13 @@ const FeaturedProducts = () => {
             <Card
               hoverable
               style={{ minWidth: "200px" }}
-              cover={<img alt="example" src={carImage} />}
+              cover={
+                <img
+                  alt="example"
+                  src={item.image[0]}
+                  className="FeaturedCar-image"
+                />
+              }
             >
               <Meta
                 style={{
@@ -43,11 +51,7 @@ const FeaturedProducts = () => {
                   fontSize: "1.1rem",
                   fontFamily: '"Hind Siliguri", sans-serif',
                 }}
-                title={
-                  <h3 style={{ fontSize: "1.4rem" }}>
-                    Toyota Corolla Axio X 2015
-                  </h3>
-                }
+                title={<h3 style={{ fontSize: "1.4rem" }}>T{item.name}</h3>}
                 description={
                   <>
                     <Flex
@@ -62,7 +66,7 @@ const FeaturedProducts = () => {
                           padding: "5px 10px",
                         }}
                       >
-                        Model: <span className="text-primary">2015</span>
+                        Model: <span className="text-primary">{item.year}</span>
                       </p>
                       <p
                         style={{
@@ -70,13 +74,13 @@ const FeaturedProducts = () => {
                           padding: "5px 10px",
                         }}
                       >
-                        CC: <span className="text-primary">1500</span>
+                        CC: <span className="text-primary">{item.CC}</span>
                       </p>
                     </Flex>
 
                     <p>
                       Asking Price:{" "}
-                      <span className="text-primary">25,00,000 BDT</span>
+                      <span className="text-primary">{item.price} BDT</span>
                     </p>
                   </>
                 }
@@ -85,14 +89,16 @@ const FeaturedProducts = () => {
           </Col>
         ))}
       </Row>
-      <Button
-        color="primary"
-        variant="solid"
-        size="large"
-        style={{ margin: "0 auto", display: "block" }}
-      >
-        View All
-      </Button>
+      <Link to="/cars">
+        <Button
+          color="primary"
+          variant="solid"
+          size="large"
+          style={{ margin: "0 auto", display: "block" }}
+        >
+          View All
+        </Button>
+      </Link>
     </div>
   );
 };

@@ -44,12 +44,15 @@ const Navbar = () => {
   const menuItemsForMobile = [
     ...menuItems,
     isLoggedIn
-      ? { key: "dashboard", label: <Link to="/dashboard">Dashboard</Link> }
+      ? {
+          key: "dashboard",
+          label: <Link to="/admin-dashboard">Dashboard</Link>,
+        }
       : null,
   ].filter((item) => item !== null);
 
   const userMenuItems = [
-    { key: "1", label: <Link to="/dashboard">Dashboard</Link> },
+    { key: "1", label: <Link to="/admin-dashboard/cars">Dashboard</Link> },
     { key: "2", label: <div onClick={handleLogout}>Logout</div> },
   ];
 

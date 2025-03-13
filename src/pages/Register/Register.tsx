@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Form, Input, Button } from "antd";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useRegisterMutation } from "../../redux/features/auth/authApi";
 import { toast } from "sonner";
 import "./Register.css";
@@ -85,6 +85,14 @@ const Register = () => {
             Register
           </Button>
         </Form.Item>
+        <p
+          style={{
+            textAlign: "center",
+            fontSize: "1.1rem",
+          }}
+        >
+          Already have an account <Link to="/login">Login</Link>
+        </p>
       </Form>
     </div>
   );

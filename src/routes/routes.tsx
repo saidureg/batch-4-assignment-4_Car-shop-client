@@ -7,7 +7,8 @@ import About from "../pages/About/About";
 import AllCars from "../pages/Cars/AllCars";
 import CarDetails from "../pages/Cars/CarDetails";
 import Dashboard from "../components/layout/Dashboard";
-import Product from "../pages/Dashboard/Admin/Product/Product";
+import Car from "../pages/Dashboard/Admin/Cars/Car";
+import OrderVerification from "../pages/Order/OrderVerification";
 
 const router = createBrowserRouter([
   {
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
         element: <CarDetails />,
       },
       {
+        path: "/orders/verify",
+        element: <OrderVerification />,
+      },
+      {
         path: "/about",
         element: <About />,
       },
@@ -42,6 +47,24 @@ const router = createBrowserRouter([
     element: <Register />,
   },
   {
+    path: "admin-dashboard",
+    element: <Dashboard />,
+    children: [
+      {
+        path: "order",
+        element: <div>Order</div>,
+      },
+      {
+        path: "cars",
+        element: <Car />,
+      },
+      {
+        path: "user",
+        element: <div>User</div>,
+      },
+    ],
+  },
+  {
     path: "dashboard",
     element: <Dashboard />,
     children: [
@@ -50,12 +73,12 @@ const router = createBrowserRouter([
         element: <div>Order</div>,
       },
       {
-        path: "products",
-        element: <Product />,
+        path: "cars",
+        element: <Car />,
       },
       {
-        path: "user",
-        element: <div>User</div>,
+        path: "change-password",
+        element: <div>Change Password</div>,
       },
     ],
   },

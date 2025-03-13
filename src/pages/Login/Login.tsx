@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Form, Input, Button } from "antd";
 import "./Login.css";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../redux/hook";
 import { useLoginMutation } from "../../redux/features/auth/authApi";
 import { verifyToken } from "../../utils/verifyToken";
@@ -86,6 +86,14 @@ const Login = () => {
             Login
           </Button>
         </Form.Item>
+        <p
+          style={{
+            textAlign: "center",
+            fontSize: "1.1rem",
+          }}
+        >
+          Don't have an account <Link to="/register">Register</Link>
+        </p>
       </Form>
     </div>
   );

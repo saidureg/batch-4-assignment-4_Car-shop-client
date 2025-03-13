@@ -10,7 +10,7 @@ import { NavLink, Outlet } from "react-router-dom";
 const { Header, Content, Sider } = Layout;
 
 const items = [
-  { key: "1", icon: <ProductOutlined />, label: "Products", path: "products" },
+  { key: "1", icon: <ProductOutlined />, label: "Cars", path: "cars" },
   { key: "2", icon: <ShoppingCartOutlined />, label: "Order", path: "order" },
   { key: "3", icon: <TeamOutlined />, label: "User", path: "user" },
 ].map((item) => ({
