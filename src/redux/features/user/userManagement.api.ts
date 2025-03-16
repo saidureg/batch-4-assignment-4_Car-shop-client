@@ -6,7 +6,6 @@ const userManagementApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getAllUsers: builder.query({
       query: (args) => {
-        console.log(args);
         const params = new URLSearchParams();
 
         if (args) {
@@ -21,12 +20,28 @@ const userManagementApi = baseApi.injectEndpoints({
           params: params,
         };
       },
+      providesTags: ["users"],
       transformResponse: (response: TResponseRedux<TUser[]>) => {
         return {
           data: response.data,
-          //   meta: response.meta,
         };
       },
+    }),
+
+    blockUser: builder.mutation({
+      query: (id: string) => ({
+        url: `/admin/${id}/block`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["users"],
+    }),
+
+    deleteUser: builder.mutation({
+      query: (id: string) => ({
+        url: `/admin/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["users"],
     }),
 
     changePassword: builder.mutation({
@@ -35,9 +50,14 @@ const userManagementApi = baseApi.injectEndpoints({
         method: "POST",
         body: data,
       }),
+      invalidatesTags: ["users"],
     }),
   }),
 });
 
-export const { useGetAllUsersQuery, useChangePasswordMutation } =
-  userManagementApi;
+export const {
+  useGetAllUsersQuery,
+  useChangePasswordMutation,
+  useBlockUserMutation,
+  useDeleteUserMutation,
+} = userManagementApi;

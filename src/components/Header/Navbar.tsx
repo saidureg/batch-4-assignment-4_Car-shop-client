@@ -3,7 +3,7 @@ import { Menu, Drawer, Avatar, Dropdown, Typography } from "antd";
 import { MenuOutlined } from "@ant-design/icons";
 import "./Navbar.css";
 
-import logo from "../../assets/car_logo.png";
+import logo from "../../assets/auto_shop_logo.png";
 import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../redux/hook";
 import { logout, TUser } from "../../redux/features/auth/authSlice";
@@ -14,6 +14,7 @@ const { Text } = Typography;
 const Navbar = () => {
   const [visible, setVisible] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userRole, setUserRole] = useState<string>("");
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -24,7 +25,7 @@ const Navbar = () => {
     const token = localStorage.getItem("token");
     if (token) {
       const user = verifyToken(token) as TUser;
-      console.log("user", user);
+      setUserRole(user.role);
     }
     setIsLoggedIn(!!token);
   }, []);
@@ -46,13 +47,40 @@ const Navbar = () => {
     isLoggedIn
       ? {
           key: "dashboard",
-          label: <Link to="/admin-dashboard">Dashboard</Link>,
+          label: (
+            <Link
+              to={
+                userRole === "admin"
+                  ? "/dashboard/cars"
+                  : userRole === "user"
+                  ? "/dashboard/profile"
+                  : "/"
+              }
+            >
+              Dashboard
+            </Link>
+          ),
         }
       : null,
   ].filter((item) => item !== null);
 
   const userMenuItems = [
-    { key: "1", label: <Link to="/admin-dashboard/cars">Dashboard</Link> },
+    {
+      key: "1",
+      label: (
+        <Link
+          to={
+            userRole === "admin"
+              ? "/dashboard/cars"
+              : userRole === "user"
+              ? "/dashboard/profile"
+              : "/"
+          }
+        >
+          Dashboard
+        </Link>
+      ),
+    },
     { key: "2", label: <div onClick={handleLogout}>Logout</div> },
   ];
 

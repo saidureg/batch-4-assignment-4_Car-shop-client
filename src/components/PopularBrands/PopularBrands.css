@@ -76,3 +76,23 @@
   color: #007bff;
   margin-bottom: 10px;
 }
+
+@media (max-width: 768px) {
+  .brand-logo {
+    height: 60px !important;
+    width: 35% !important;
+  }
+
+  .section-title {
+    font-size: 20px;
+  }
+
+  .feature-icon {
+    font-size: 32px;
+  }
+
+  .feature-card {
+    padding-top: 24px;
+    padding-bottom: 12px;
+  }
+}

@@ -66,9 +66,8 @@ const Car = () => {
       CNG: values.CNG || false,
     };
 
-    const res = await createCar(newProduct);
+    await createCar(newProduct);
     toast.success("Added new product!", { id: toastId, duration: 2000 });
-    console.log("Added new product", res);
     setIsModalOpen(false);
     form.resetFields();
   };
@@ -104,9 +103,9 @@ const Car = () => {
   const handleDelete = async (id: string): Promise<void> => {
     try {
       await deleteCar(id);
-      console.log(`Deleted product with id ${id}`);
+      toast.success("Product deleted successfully!", { duration: 2000 });
     } catch (error) {
-      console.error("Error deleting product:", error);
+      toast.error("Failed to delete product.", { duration: 2000 });
     }
   };
 

@@ -9,6 +9,12 @@ import CarDetails from "../pages/Cars/CarDetails";
 import Dashboard from "../components/layout/Dashboard";
 import Car from "../pages/Dashboard/Admin/Cars/Car";
 import OrderVerification from "../pages/Order/OrderVerification";
+import Profile from "../pages/Dashboard/User/Profile/Profile";
+import ViewOrder from "../pages/Dashboard/User/ViewOrder";
+// import ChangePassword from "../pages/Dashboard/User/Profile/ChangePassword";
+import ProtectedRoute from "../components/layout/ProtectedRoute";
+import Order from "../pages/Dashboard/Admin/Order/Order";
+import UserTable from "../pages/Dashboard/Admin/UserManagement/UserTable";
 
 const router = createBrowserRouter([
   {
@@ -29,7 +35,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/orders/verify",
-        element: <OrderVerification />,
+        element: (
+          <ProtectedRoute role="user">
+            <OrderVerification />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "/about",
@@ -47,38 +57,52 @@ const router = createBrowserRouter([
     element: <Register />,
   },
   {
-    path: "admin-dashboard",
-    element: <Dashboard />,
-    children: [
-      {
-        path: "order",
-        element: <div>Order</div>,
-      },
-      {
-        path: "cars",
-        element: <Car />,
-      },
-      {
-        path: "user",
-        element: <div>User</div>,
-      },
-    ],
-  },
-  {
     path: "dashboard",
     element: <Dashboard />,
     children: [
       {
         path: "order",
-        element: <div>Order</div>,
+        element: (
+          <ProtectedRoute role="admin">
+            <Order />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "cars",
-        element: <Car />,
+        element: (
+          <ProtectedRoute role="admin">
+            <Car />
+          </ProtectedRoute>
+        ),
       },
       {
-        path: "change-password",
-        element: <div>Change Password</div>,
+        path: "user",
+        element: <UserTable />,
+      },
+      {
+        path: "profile",
+        element: (
+          <ProtectedRoute role="user">
+            <Profile />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "myorder",
+        element: (
+          <ProtectedRoute role="user">
+            <ViewOrder />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "changepassword",
+        element: (
+          <ProtectedRoute role="user">
+            <div>Change Password</div>
+          </ProtectedRoute>
+        ),
       },
     ],
   },

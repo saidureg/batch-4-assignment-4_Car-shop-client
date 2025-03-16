@@ -3,24 +3,69 @@ import {
   ShoppingCartOutlined,
   TeamOutlined,
 } from "@ant-design/icons";
-import { Layout, Menu } from "antd";
-import { useState } from "react";
-import { NavLink, Outlet } from "react-router-dom";
+import { Button, Layout, Menu } from "antd";
+import { useEffect, useState } from "react";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import { verifyToken } from "../../utils/verifyToken";
+import { logout, TUser } from "../../redux/features/auth/authSlice";
+import { useAppDispatch } from "../../redux/hook";
+import "./Dashboard.css";
 
 const { Header, Content, Sider } = Layout;
 
-const items = [
-  { key: "1", icon: <ProductOutlined />, label: "Cars", path: "cars" },
-  { key: "2", icon: <ShoppingCartOutlined />, label: "Order", path: "order" },
-  { key: "3", icon: <TeamOutlined />, label: "User", path: "user" },
-].map((item) => ({
-  key: item.key,
-  icon: item.icon,
-  label: <NavLink to={`/dashboard/${item.path}`}>{item.label}</NavLink>,
-}));
-
 const Dashboard = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [userRole, setUserRole] = useState<string>("");
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const user = verifyToken(token) as TUser;
+      setUserRole(user.role);
+    }
+  }, [userRole]);
+
+  let items;
+
+  if (userRole === "user") {
+    items = [
+      { key: "1", icon: <TeamOutlined />, label: "Profile", path: "profile" },
+      {
+        key: "2",
+        icon: <ShoppingCartOutlined />,
+        label: "Order",
+        path: "myorder",
+      },
+    ].map((item) => ({
+      key: item.key,
+      icon: item.icon,
+      label: <NavLink to={`/dashboard/${item.path}`}>{item.label}</NavLink>,
+    }));
+  } else if (userRole === "admin") {
+    items = [
+      { key: "1", icon: <ProductOutlined />, label: "Cars", path: "cars" },
+      {
+        key: "2",
+        icon: <ShoppingCartOutlined />,
+        label: "Order",
+        path: "order",
+      },
+      { key: "3", icon: <TeamOutlined />, label: "User", path: "user" },
+    ].map((item) => ({
+      key: item.key,
+      icon: item.icon,
+      label: <NavLink to={`/dashboard/${item.path}`}>{item.label}</NavLink>,
+    }));
+  }
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    dispatch(logout());
+    navigate("/login");
+  };
+
   return (
     <Layout style={{ height: "100vh" }}>
       <Sider
@@ -40,8 +85,9 @@ const Dashboard = () => {
           style={{
             height: "4rem",
             display: "flex",
-            justifyContent: "center",
+            justifyContent: "justify-between",
             alignItems: "center",
+            padding: "0 1rem",
           }}
         >
           <h1 style={{ color: "white" }}>Dashboard</h1>
@@ -64,20 +110,18 @@ const Dashboard = () => {
       >
         <Header
           style={{
-            padding: 0,
-          }}
-        />
-        <Content
-          style={{
-            margin: "24px 16px 0",
+            padding: 12,
+            display: "flex",
+            justifyContent: "flex-end",
+            alignItems: "center",
           }}
         >
-          <div
-            style={{
-              padding: 24,
-              minHeight: 360,
-            }}
-          >
+          <Button onClick={handleLogout} variant="solid" color="danger">
+            Logout
+          </Button>
+        </Header>
+        <Content className="content-layout">
+          <div className="content-layout-outlet">
             <Outlet />
           </div>
         </Content>

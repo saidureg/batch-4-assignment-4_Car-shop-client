@@ -12,7 +12,7 @@ import {
 import "antd/dist/reset.css";
 import "./CarDetails.css";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useGetCarByIdQuery } from "../../redux/features/car/carApi";
 import { useCreateOrderMutation } from "../../redux/features/order/orderApi";
 import { toast } from "sonner";
@@ -23,6 +23,7 @@ const { Content } = Layout;
 
 const CarDetails = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
 
   const { data: singleCar } = useGetCarByIdQuery(id ?? "");
 
@@ -57,6 +58,12 @@ const CarDetails = () => {
   }, [singleCar]);
 
   const showModal = () => {
+    if (!useremail) {
+      toast.error("Please login to order");
+      navigate("/login", { replace: true });
+      return;
+    }
+
     setIsModalOpen(true);
   };
 

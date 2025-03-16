@@ -24,7 +24,6 @@ const Login = () => {
   const onFinish = async (values: LoginValues) => {
     const toastId = toast.loading("Logging in...");
     setLoading(true);
-    console.log("Success:", values);
 
     try {
       const userInfo = {
@@ -42,8 +41,10 @@ const Login = () => {
       dispatch(setUser({ token: res.data.token, user: user }));
       toast.success("Login successful!", { id: toastId, duration: 2000 });
       setLoading(false);
-      console.log("User:", user);
-      navigate("/");
+
+      if (user.role === "admin") {
+        navigate("/dashboard/cars", { replace: true });
+      } else navigate("/", { replace: true });
     } catch (error) {
       console.log("Error:", error);
       toast.error("Login failed!", { id: toastId, duration: 2000 });

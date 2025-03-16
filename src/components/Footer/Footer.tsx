@@ -4,7 +4,7 @@ import {
   YoutubeOutlined,
   InstagramOutlined,
 } from "@ant-design/icons";
-import logo from "../../assets/car_logo.png";
+import logo from "../../assets/auto_shop_logo.png";
 
 const { Footer } = Layout;
 const { Title, Text } = Typography;
@@ -18,13 +18,19 @@ const AppFooter = () => {
         <Row gutter={[32, 32]} justify="space-between">
           {/* Left Section */}
           <Col xs={24} sm={12} md={8}>
-            <div style={{ height: "50px", marginBottom: "24px" }}>
-              <img src={logo} alt="Auto Car" style={{ height: "100%" }} />
+            <div
+              style={{
+                height: "50px",
+                marginBottom: "24px",
+                filter: "invert(1)",
+              }}
+            >
+              <img src={logo} alt="Auto Style" style={{ height: "100%" }} />
             </div>
             <Text
               style={{ color: "#aaa", display: "block", marginBottom: "16px" }}
             >
-              Auto Car is engaged in car selling, displaying and purchasing
+              Auto Style is engaged in car selling, displaying and purchasing
               market in Bangladesh. Today the company has grown into a leading
               provider of quality services in Bangladesh's Car Market.
             </Text>
@@ -59,7 +65,7 @@ const AppFooter = () => {
               <br />
               Sher-e-Bangla Nagar, Dhaka-1215, Bangladesh
               <br />
-              Mob: 01919-777999
+              Mob: 01900-777777
             </Text>
           </Col>
         </Row>
@@ -77,7 +83,7 @@ const AppFooter = () => {
           <br />
           <Text style={{ color: "#aaa" }}>
             Design & Developed With <span style={{ color: "#007bff" }}>💙</span>{" "}
-            By Briom IT
+            By Saidur IT
           </Text>
         </div>
       </div>
