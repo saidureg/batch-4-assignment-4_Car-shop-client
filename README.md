@@ -14,6 +14,19 @@ Access the live API [Here](https://batch-4-assignment-4-car-shop-client.vercel.a
 - Login and Logout functionality
 - JWT-based authentication for session management
 - Role-based access (User/Admin)
+- Search & Filter (by brand, model, category, price, and availability)
+- Checkout Page: Place orders, quantity validation, total price calculation, and payment integration
+- Admin Dashboard: Manage users, products (CRUD), and orders (CRUD)
+- User Dashboard: View orders, manage profile settings, and update password
+
+## Tech Stack
+
+- Frontend: React, Redux Toolkit, Ant Design, Tailwind CSS
+- Backend: Node.js, Express.js, MongoDB, Mongoose
+- Authentication: JWT, bcrypt
+- Validation: Zod for schema validation
+- Payment Integration: SurjoPay
+- State Management: Redux Toolkit
 
 ## _Project Setup Guide_
 
@@ -26,7 +39,7 @@ Before starting, ensure the following are installed on your system:
 - React.js
   -Ant Design
 - `yarn` or `npm` installed globally on your system.
-- MongoDB (running locally or a connection string for a cloud database like MongoDB Atlas)
+- MongoDB and Mongoose (running locally or a connection string for a cloud database like MongoDB Atlas)
 - Visual Studio Code
 - TypeScript (installed globally via npm install -g typescript)
 
@@ -37,7 +50,7 @@ Before starting, ensure the following are installed on your system:
    - Open your terminal and navigate to the desired folder.
    - Clone the repository using the command:
      ```bash
-     git clone <repository-link>
+     git clone https://github.com/saidureg/batch-4-assignment-4_Car-shop-client.git
      ```
 
 2. **Open the Project in Visual Studio Code:**
