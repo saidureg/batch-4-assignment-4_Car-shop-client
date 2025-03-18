@@ -14,3 +14,25 @@
   background-color: rgba(255, 228, 196, 0.568);
   transition: transform 0.8s ease-in-out;
 }
+
+.featured-section-title {
+  color: white;
+  text-align: center;
+  font-size: 3rem !important;
+  font-weight: 700;
+}
+
+@media (max-width: 768px) {
+  .featured-products {
+    margin-top: 2rem;
+    padding: 20px;
+  }
+  .FeaturedCar-image {
+    height: 200px;
+  }
+
+  .featured-section-title {
+    font-size: 2rem !important;
+    margin-top: 1rem;
+  }
+}

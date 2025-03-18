@@ -29,6 +29,13 @@ const Profile = () => {
     const toastId = toast.loading("Changing password...");
     try {
       const response = await changePassword(values).unwrap();
+      if (response.error) {
+        toast.error(response.data?.message || "Failed to change password.", {
+          id: toastId,
+          duration: 2000,
+        });
+        return;
+      }
       toast.success(response.message || "Password changed successfully!", {
         id: toastId,
         duration: 2000,

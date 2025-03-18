@@ -5,6 +5,8 @@
   background-size: cover;
   padding-top: 70px;
   padding-bottom: 40px;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
 .welcome-container {
@@ -26,9 +28,9 @@
 }
 
 .welcome-content h1 {
-  font-size: 2rem;
+  font-size: 3rem;
   font-weight: 700;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
   line-height: 30px;
 }
 
@@ -55,5 +57,9 @@
 
   .responsive-image {
     max-width: 80%;
+  }
+
+  .welcome-content h1 {
+    font-size: 1.8rem;
   }
 }

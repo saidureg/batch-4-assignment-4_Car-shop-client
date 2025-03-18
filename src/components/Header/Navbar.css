@@ -49,7 +49,14 @@
   border-radius: 50%;
 }
 
+.drawer-avatar {
+  display: block;
+}
+
 @media (max-width: 768px) {
+  .navbar {
+    padding: 12px 24px;
+  }
   .menu-container {
     display: none;
   }
@@ -66,5 +73,9 @@
     display: flex;
     justify-content: flex-end;
     padding: 16px;
+  }
+
+  .dropdown {
+    display: none;
   }
 }

@@ -64,4 +64,18 @@
   .contentStyle {
     display: none !important;
   }
+
+  .text-content {
+    position: absolute;
+    line-height: 1.5;
+    color: #fff;
+    width: 100%;
+    top: 50%;
+    text-align: center;
+  }
+
+  .text-content h1 {
+    font-size: 2.7rem;
+    font-weight: 700;
+  }
 }

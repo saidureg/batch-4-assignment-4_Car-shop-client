@@ -9,6 +9,7 @@ import {
   Row,
   Col,
   Input,
+  Skeleton,
 } from "antd";
 import { EnvironmentOutlined } from "@ant-design/icons";
 import "antd/dist/reset.css";
@@ -51,7 +52,7 @@ const AllCars = () => {
     inStock && { name: "inStock", value: "true" },
   ].filter(Boolean);
 
-  const { data: allCars } = useGetAllCarsQuery(queryParams);
+  const { data: allCars, isLoading } = useGetAllCarsQuery(queryParams);
 
   useEffect(() => {
     if (allCars?.data) {
@@ -213,71 +214,80 @@ const AllCars = () => {
                 {allCars?.data?.length} vehicles for sale in Bangladesh
               </Title>
             </Header>
-            <Content style={{ padding: "20px" }}>
-              <Row gutter={[16, 16]}>
-                {allCars?.data?.map((item) => (
-                  <Col xs={24} sm={24} md={12} lg={8} xl={8} key={item._id}>
-                    <Card hoverable>
-                      <img
-                        alt={item.name}
-                        src={item?.image[0]}
-                        className="car-image zoom-effect"
-                      />
-                      <div style={{ padding: "10px" }}>
-                        <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                          }}
-                        >
-                          <Title level={5} style={{ margin: 0 }}>
-                            {item?.name}
-                          </Title>
+            {isLoading ? (
+              <>
+                <Skeleton active />
+              </>
+            ) : (
+              <>
+                <Content style={{ padding: "20px" }}>
+                  <Row gutter={[16, 16]}>
+                    {allCars?.data?.map((item) => (
+                      <Col xs={24} sm={24} md={12} lg={8} xl={8} key={item._id}>
+                        <Card hoverable>
+                          <img
+                            alt={item.name}
+                            src={item?.image[0]}
+                            className="car-image zoom-effect"
+                          />
+                          <div style={{ padding: "10px" }}>
+                            <div
+                              style={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                alignItems: "center",
+                              }}
+                            >
+                              <Title level={5} style={{ margin: 0 }}>
+                                {item?.name}
+                              </Title>
 
-                          <Text
-                            type="secondary"
-                            style={{
-                              fontSize: "14px",
-                              fontWeight: "bold",
-                              padding: "4px",
-                              backgroundColor: "#f0f0f0",
-                              borderRadius: "4px",
-                            }}
-                          >
-                            {item?.category}
-                          </Text>
-                        </div>
-                        <div
-                          style={{
-                            marginBottom: "10px",
-                          }}
-                        >
-                          <Text type="secondary">
-                            {item?.brand} | {item?.model}
-                          </Text>
-                        </div>
-                        <Text type="secondary">
-                          <EnvironmentOutlined /> {item?.location || "Dhaka"}
-                        </Text>
-                        <p>
-                          <b style={{ color: "#d32f2f" }}>Price:</b>
-                          {item.price}
-                        </p>
-                        <p>
-                          <b>Mileage:</b> {item?.Mileage || "N/A"}
-                        </p>
-                      </div>
-                      <Link to={`/cars/${item._id}`}>
-                        <Button block variant="solid" color="primary">
-                          View Details
-                        </Button>
-                      </Link>
-                    </Card>
-                  </Col>
-                ))}
-              </Row>
-            </Content>
+                              <Text
+                                type="secondary"
+                                style={{
+                                  fontSize: "14px",
+                                  fontWeight: "bold",
+                                  padding: "4px",
+                                  backgroundColor: "#f0f0f0",
+                                  borderRadius: "4px",
+                                }}
+                              >
+                                {item?.category}
+                              </Text>
+                            </div>
+                            <div
+                              style={{
+                                marginBottom: "10px",
+                              }}
+                            >
+                              <Text type="secondary">
+                                {item?.brand} | {item?.model}
+                              </Text>
+                            </div>
+                            <Text type="secondary">
+                              <EnvironmentOutlined />{" "}
+                              {item?.location || "Dhaka"}
+                            </Text>
+                            <p>
+                              <b style={{ color: "#d32f2f" }}>Price:</b>
+                              {item.price}
+                            </p>
+                            <p>
+                              <b>Mileage:</b> {item?.Mileage || "N/A"}
+                            </p>
+                          </div>
+                          <Link to={`/cars/${item._id}`}>
+                            <Button block variant="solid" color="primary">
+                              View Details
+                            </Button>
+                          </Link>
+                        </Card>
+                      </Col>
+                    ))}
+                  </Row>
+                </Content>
+              </>
+            )}
           </Layout>
         </Layout>
       </div>

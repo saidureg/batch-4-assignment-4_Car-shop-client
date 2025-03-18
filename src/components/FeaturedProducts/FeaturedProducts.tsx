@@ -9,16 +9,7 @@ const FeaturedProducts = () => {
   const { data: allCars } = useGetAllCarsQuery(undefined);
   return (
     <div className="featured-products">
-      <h2
-        style={{
-          color: "white",
-          textAlign: "center",
-          fontSize: "3rem",
-          fontWeight: "bold",
-        }}
-      >
-        Featured Products
-      </h2>
+      <h2 className="featured-section-title">Featured Products</h2>
       <Row
         gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
         className="card-container"

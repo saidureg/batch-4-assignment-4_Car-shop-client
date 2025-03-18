@@ -22,7 +22,11 @@ const UserTable = () => {
         toast.warning("User is already blocked and cannot be blocked again");
         return;
       }
-      await blockUser(id);
+      const res = await blockUser(id);
+      if (res.error) {
+        toast.error("Error blocking user");
+        return;
+      }
       toast.success("User status updated successfully!");
     } catch (error) {
       toast.error("Error updating user status");
@@ -31,7 +35,11 @@ const UserTable = () => {
 
   const handleDeleteUser = async (id: string): Promise<void> => {
     try {
-      await deleteUser(id);
+      const res = await deleteUser(id);
+      if (res.error) {
+        toast.error("Error deleting user");
+        return;
+      }
       toast.success("User deleted successfully!");
     } catch (error) {
       toast.error("Error deleting user");

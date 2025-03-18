@@ -6,7 +6,7 @@ const WelcomeSection = () => {
     <section className="welcome-section">
       <div className="section-container welcome-container">
         <div className="welcome-content">
-          <h1>
+          <h1 style={{ marginBottom: "12px" }}>
             Welcome To <span className="text-primary">Auto Style</span>
           </h1>
           <h5 style={{ marginBottom: "10px" }}>

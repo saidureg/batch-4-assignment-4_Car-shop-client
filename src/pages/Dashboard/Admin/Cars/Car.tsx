@@ -1,5 +1,15 @@
 import { useEffect, useState } from "react";
-import { Table, Button, Modal, Form, Input, Checkbox, Row, Col } from "antd";
+import {
+  Table,
+  Button,
+  Modal,
+  Form,
+  Input,
+  Checkbox,
+  Row,
+  Col,
+  Select,
+} from "antd";
 import { TCar } from "../../../../types";
 import { useGetAllCarsQuery } from "../../../../redux/features/car/carApi";
 import {
@@ -46,30 +56,52 @@ const Car = () => {
     ...car,
   }));
 
+  const parseImageUrls = (image: any): string[] => {
+    if (typeof image === "string") {
+      return image.split(",").map((url) => url.trim());
+    }
+    return Array.isArray(image) ? image : [];
+  };
+
   const handleAddProduct = async (values: Omit<TCar, "_id">): Promise<void> => {
     const toastId = toast.loading("Adding new product...");
-    const imageUrls =
-      typeof values.image === "string"
-        ? values.image.split(",").map((url) => url.trim())
-        : [];
+    try {
+      const imageUrls = parseImageUrls(values.image);
 
-    const newProduct: TCar = {
-      ...values,
-      inStock: values.quantity > 0,
-      description: values.description || "",
-      image: imageUrls,
-      location: values.location || "",
-      Mileage: values.Mileage || 0,
-      AC: values.AC || false,
-      PST: values.PST || false,
-      MG: values.MG || false,
-      CNG: values.CNG || false,
-    };
+      const newProduct: TCar = {
+        ...values,
+        year: Number(values.year),
+        price: Number(values.price),
+        CC: Number(values.CC),
+        quantity: Number(values.quantity),
+        Mileage: Number(values.Mileage) || 0,
+        inStock: values.quantity > 0,
+        description: values.description || "",
+        image: imageUrls,
+        location: values.location || "",
+        AC: values.AC || false,
+        PST: values.PST || false,
+        MG: values.MG || false,
+        CNG: values.CNG || false,
+      };
 
-    await createCar(newProduct);
-    toast.success("Added new product!", { id: toastId, duration: 2000 });
-    setIsModalOpen(false);
-    form.resetFields();
+      const res = await createCar(newProduct);
+      if (res.error) {
+        toast.error("Failed to add new product.", {
+          id: toastId,
+          duration: 2000,
+        });
+        return;
+      }
+      toast.success("Added new product!", { id: toastId, duration: 2000 });
+      setIsModalOpen(false);
+      form.resetFields();
+    } catch (error: any) {
+      toast.error("Failed to add new product.", {
+        id: toastId,
+        duration: 2000,
+      });
+    }
   };
 
   const handleUpdateProduct = async (
@@ -77,32 +109,52 @@ const Car = () => {
   ): Promise<void> => {
     if (!currentCar) return;
 
-    const imageUrls =
-      typeof values.image === "string"
-        ? values.image.split(",").map((url) => url.trim())
-        : [];
+    try {
+      const imageUrls = values.image
+        ? parseImageUrls(values.image)
+        : currentCar.image;
 
-    const updatedProduct = {
-      ...currentCar,
-      ...values,
-      inStock: values.quantity > 0,
-      description: values.description || "",
-      image: imageUrls,
-      location: values.location || "",
-      Mileage: values.Mileage || 0,
-      AC: values.AC || false,
-      PST: values.PST || false,
-      MG: values.MG || false,
-      CNG: values.CNG || false,
-    };
+      const updatedProduct = {
+        ...currentCar,
+        ...values,
+        year: Number(values.year),
+        price: Number(values.price),
+        CC: Number(values.CC),
+        quantity: Number(values.quantity),
+        Mileage: Number(values.Mileage) || 0,
+        inStock: values.quantity > 0,
+        description: values.description || "",
+        image: imageUrls,
+        location: values.location || "",
+        AC: values.AC || false,
+        PST: values.PST || false,
+        MG: values.MG || false,
+        CNG: values.CNG || false,
+      };
 
-    await updateCar({ id: currentCar._id, body: updatedProduct });
-    setIsModalOpen(false);
+      const res = await updateCar({ id: currentCar._id, body: updatedProduct });
+
+      if (res.error) {
+        toast.error("Failed to update product.", { duration: 2000 });
+        return;
+      }
+
+      toast.success("Product updated successfully!", { duration: 2000 });
+
+      setIsModalOpen(false);
+      form.resetFields();
+    } catch (error: any) {
+      toast.error("Failed to update product.", { duration: 2000 });
+    }
   };
 
   const handleDelete = async (id: string): Promise<void> => {
     try {
-      await deleteCar(id);
+      const res = await deleteCar(id);
+      if (res.error) {
+        toast.error("Failed to delete product.", { duration: 2000 });
+        return;
+      }
       toast.success("Product deleted successfully!", { duration: 2000 });
     } catch (error) {
       toast.error("Failed to delete product.", { duration: 2000 });
@@ -206,9 +258,15 @@ const Car = () => {
           <Form.Item
             name="category"
             label="Category"
-            rules={[{ required: true }]}
+            rules={[{ required: true, message: "Please select a category!" }]}
           >
-            <Input />
+            <Select>
+              <Select.Option value="Sedan">Sedan</Select.Option>
+              <Select.Option value="SUV">SUV</Select.Option>
+              <Select.Option value="Truck">Truck</Select.Option>
+              <Select.Option value="Coupe">Coupe</Select.Option>
+              <Select.Option value="Convertible">Convertible</Select.Option>
+            </Select>
           </Form.Item>
           <Form.Item name="description" label="Description">
             <Input.TextArea />

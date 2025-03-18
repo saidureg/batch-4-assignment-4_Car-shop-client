@@ -46,7 +46,7 @@ const Order = () => {
     estimatedDelivery?: dayjs.Dayjs;
   }): Promise<void> => {
     if (!currentOrder) return;
-    await updateOrder({
+    const res = await updateOrder({
       id: currentOrder._id,
       body: {
         status: values.status,
@@ -55,13 +55,22 @@ const Order = () => {
           : currentOrder.estimatedDelivery,
       },
     });
+
+    if (res.error) {
+      toast.error("Error updating order");
+      return;
+    }
     toast.success("Order status updated!");
     setIsModalOpen(false);
   };
 
   const handleDelete = async (id: string): Promise<void> => {
     try {
-      await deleteOrder(id);
+      const res = await deleteOrder(id);
+      if (res.error) {
+        toast.error("Error deleting order");
+        return;
+      }
       toast.success("Order deleted successfully!");
     } catch (error) {
       toast.error("Error deleting order");

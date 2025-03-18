@@ -51,7 +51,7 @@ const AppFooter = () => {
               <br />
               89/2, West Panthapath, Dhaka-1215, Bangladesh
               <br />
-              Phone: (+88) 02-4102-5178, (+88) 02-4102-5179
+              Phone: (+88) 02-0000-5555, (+88) 02-4444-1111
             </Text>
           </Col>
 
@@ -79,7 +79,7 @@ const AppFooter = () => {
             paddingTop: "16px",
           }}
         >
-          <Text style={{ color: "#aaa" }}>© Copyright 2022</Text>
+          <Text style={{ color: "#aaa" }}>© Copyright 2025</Text>
           <br />
           <Text style={{ color: "#aaa" }}>
             Design & Developed With <span style={{ color: "#007bff" }}>💙</span>{" "}

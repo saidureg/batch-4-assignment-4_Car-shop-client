@@ -28,7 +28,14 @@ const Register = () => {
         password: values.password,
       };
 
-      await register(userInfo).unwrap();
+      const res = await register(userInfo).unwrap();
+      if (res.error) {
+        toast.error(res.data?.message || "Registration failed!", {
+          id: toastId,
+          duration: 2000,
+        });
+        return;
+      }
       toast.success("Registration successful!", {
         id: toastId,
         duration: 2000,

@@ -62,6 +62,10 @@ const Navbar = () => {
           ),
         }
       : null,
+
+    isLoggedIn
+      ? { key: "logout", label: <div onClick={handleLogout}>Logout</div> }
+      : { key: "login", label: <Link to="/login">Login</Link> },
   ].filter((item) => item !== null);
 
   const userMenuItems = [
@@ -103,23 +107,25 @@ const Navbar = () => {
         <MenuOutlined className="icon" />
       </div>
 
-      {isLoggedIn ? (
-        <Dropdown menu={{ items: userMenuItems }} placement="bottomRight">
-          <div className="avatar-container">
-            <Avatar
-              src="https://i.ibb.co.com/1t2tDpp9/png-clipart-united-states-avatar-organization-information-user-avatar-service-computer-wallpaper-thu.png"
-              className="avatar"
-            />
-          </div>
-        </Dropdown>
-      ) : (
-        <Link to="/login">
-          <Text style={{ fontSize: "1.2rem", fontWeight: 500 }}>Login</Text>
-        </Link>
-      )}
+      <div className="dropdown">
+        {isLoggedIn ? (
+          <Dropdown menu={{ items: userMenuItems }} placement="bottomRight">
+            <div className="avatar-container">
+              <Avatar
+                src="https://i.ibb.co.com/1t2tDpp9/png-clipart-united-states-avatar-organization-information-user-avatar-service-computer-wallpaper-thu.png"
+                className="avatar"
+              />
+            </div>
+          </Dropdown>
+        ) : (
+          <Link to="/login">
+            <Text style={{ fontSize: "1.2rem", fontWeight: 500 }}>Login</Text>
+          </Link>
+        )}
+      </div>
 
       <Drawer
-        title="Auto Shop"
+        title="Auto Style"
         placement="right"
         onClose={closeDrawer}
         open={visible}

@@ -37,8 +37,16 @@ const Login = () => {
           "Content-Type": "application/json",
         },
       }).unwrap();
+      if (res.error) {
+        toast.error(res.data?.message || "Login failed!", {
+          id: toastId,
+          duration: 2000,
+        });
+        return;
+      }
       const user = verifyToken(res.data.token) as TUser;
       dispatch(setUser({ token: res.data.token, user: user }));
+
       toast.success("Login successful!", { id: toastId, duration: 2000 });
       setLoading(false);
 
