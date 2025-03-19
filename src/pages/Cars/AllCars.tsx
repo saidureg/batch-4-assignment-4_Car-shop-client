@@ -71,7 +71,7 @@ const AllCars = () => {
   }, [allCars]);
 
   return (
-    <>
+    <div style={{ overflowX: "hidden", width: "100vw" }}>
       <div className="cars-banner">
         <div className="banner-content">
           <h1>Car Collections</h1>
@@ -104,7 +104,11 @@ const AllCars = () => {
             width={320}
             breakpoint="lg"
             collapsedWidth="0"
-            style={{ background: "#fff", maxHeight: "96vh", padding: "20px" }}
+            style={{
+              background: "#fff",
+              maxHeight: "96vh",
+              padding: "20px",
+            }}
           >
             <div
               style={{
@@ -291,7 +295,7 @@ const AllCars = () => {
           </Layout>
         </Layout>
       </div>
-    </>
+    </div>
   );
 };
 
