@@ -72,7 +72,13 @@ const CarDetails = () => {
   };
 
   const handleOrder = async (values: { quantity: number }) => {
-    await createOrder({ car: id, quantity: values.quantity });
+    const res = await createOrder({
+      car: id,
+      quantity: Number(values.quantity),
+    });
+    if (res.error) {
+      toast.error("Failed to order");
+    }
   };
 
   const toastId = "order";

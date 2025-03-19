@@ -103,7 +103,7 @@ const OrderVerification = () => {
               </>
             )}
           </div>
-          <Link to="#">
+          <Link to="/dashboard/myorder">
             <Button color="primary" variant="solid">
               View Orders
             </Button>
